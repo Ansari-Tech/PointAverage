@@ -11,7 +11,23 @@
     <h1>
         <p id="hi">hi </p>
     </h1>
-    <h3> You're looking awfully pretty today.</h3>
+    <h3> You're looking awfully preettty today.</h3>
+    <div id="container">
+        <ul class="list-group" id="semesters" />
+
+    </div>
+    <div class="dropdown" id="addSemester">
+        <select class="form-control" id="season">
+            <option value="Fall">Fall</option>
+            <option value="Spring">Spring</option>
+            <option value="Summer">Summer</option>
+            <option value="Winter">Winter</option>
+        </select>
+        <input type="number" id="year">
+        <button type=button id="submit" onclick="saveUserData()">Save</button>
+
+    </div>
+    <div><button type="button" id="signout" onclick="signOut()">Sign Out</button></div>
 
     <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
     <script src="https://www.gstatic.com/firebasejs/6.0.2/firebase-app.js"></script>
@@ -28,15 +44,42 @@
             messagingSenderId: "679769712808",
             appId: "1:679769712808:web:27bc0d4096a2feca"
         };
+
+        let currUser;
+
+        function signOut() {
+            firebase.auth().signOut();
+        }
+
+        function saveUserData() {
+            db.collection("users").doc(currUser.uid).collection("Semesters").doc(document.getElementById("season").value.toString() + " " +
+                document.getElementById("year").value).set({
+                Credits: 0,
+                Grades: 0
+            });
+            document.reload();
+        }
         firebase.initializeApp(firebaseConfig);
+        let db = firebase.firestore();
         firebase.auth().onAuthStateChanged(function(user) {
             if (user) {
                 // User is signed in.
+                currUser = user;
                 var email = user.email;
                 var emailVerified = user.emailVerified;
                 var uid = user.uid;
                 var providerData = user.providerData;
-                document.getElementById("hi").textContent += email;
+                document.getElementById("hi").textContent += user.displayName;
+
+                db.collection("users").doc(user.uid).collection("Semesters").get().then(function(querySnapshot) {
+                    querySnapshot.forEach(function(doc) {
+                        let semester = document.createElement("li");
+                        semester.setAttribute('class', "list-group-item");
+                        semester.appendChild(document.createTextNode(doc.id));
+                        document.getElementById("semesters").appendChild(semester);
+                        console.log(doc.id, " => ", doc.data());
+                    });
+                });
             } else {
                 window.location.href = "index.html";
             }
