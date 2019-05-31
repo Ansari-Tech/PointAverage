@@ -16,19 +16,106 @@
         <ul class="list-group" id="semesters" />
 
     </div>
-    <div class="dropdown" id="addSemester">
-        <select class="form-control" id="season">
-            <option value="Fall">Fall</option>
-            <option value="Spring">Spring</option>
-            <option value="Summer">Summer</option>
-            <option value="Winter">Winter</option>
-        </select>
-        <input type="number" id="year">
-        <button type=button id="submit" onclick="saveUserData()">Save</button>
 
+    <div class="container">
+        <button type="button" id="btnAddSemester" data-toggle="modal" data-target="#modalAddSemester" class="btn btn-primary">Add a Semester</button>
     </div>
     <div><button type="button" id="signout" onclick="signOut()">Sign Out</button></div>
 
+    <div class="modal fade" id="modalAddSemester" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addClassModalTitle">Add a Semester</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="inputTerm"></label>
+                            <select class="form-control" id="inputTerm">
+                                <option>Fall</option>
+                                <option>Spring</option>
+                                <option>Summer</option>
+                                <option>Winter</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputTermYear">Year</label>
+                            <input class="form-control" type="number" id="inputTermYear" max="2030" min="1969" placeholder="2019">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" onclick="saveSemester()" class="btn btn-primary">Save Semester</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalAddClass" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addClassModalTitle">Add a class</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="inputSemesterForClass">Semester</label>
+                            <select class="form-control" id="inputSemesterForClass">
+                                <option>Fall</option>
+                                <option>Spring</option>
+                                <option>Summer</option>
+                                <option>Winter</option>
+                            </select>
+                            <label for="inputTermYearForClass">Year</label>
+                            <input class="form-control" type="number" id="inputTermYearForClass" max="2030" min="1969" placeholder="2019">
+                        </div>
+                        <div class="form-group">
+                            <label for="inputClassName">Name of the Class</label>
+                            <input class="form-control" id="inputClassName" placeholder="Intro to Rocket Science">
+                        </div>
+                        <div class="form-group">
+                            <label for="inputClassNumber">Course ID</label>
+                            <input class="form-control" id="inputClassNumber" placeholder="RCKT 101">
+                        </div>
+                        <div class="form-group">
+                            <label for="inputNumberOfCredits">Number of Credits</label>
+                            <input class="form-control" type="number" id="inputNumberOfCredits" placeholder="3">
+
+                        </div>
+                        <div class="form-group">
+                            <label for="inputGradeEarned">Grade Earned</label>
+                            <select class="form-control" id="inputGradeEarned">
+                                <option>A</option>
+                                <option>B</option>
+                                <option>C</option>
+                                <option>D</option>
+                                <option>F</option>
+                                <option>P (Pass) </option>
+
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputNotes">Notes</label>
+                            <textarea class="form-control" id="inputNotes" rows="3"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" onclick="saveClass()" class="btn btn-primary">Save Class</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
     <script src="https://www.gstatic.com/firebasejs/6.0.2/firebase-app.js"></script>
     <!-- Add Firebase products that you want to use -->
@@ -51,6 +138,39 @@
             firebase.auth().signOut();
         }
 
+        function saveSemester() {
+            let term = $("#inputTerm option:selected").val();
+            db.collection("users").doc(currUser.uid).collection("Semesters").doc(term + " " +
+                document.getElementById("inputTermYear").value).set({
+                Credits: 0,
+                Grades: 0
+            });
+            populateGrades();
+        }
+
+        function saveClass() {
+            let grade = $("#inputGradeEarned option:selected").val();
+            let credits = $("#inputNumberOfCredits").val();
+            let number = $("#inputClassNumber").val();
+            let name = $("#inputClassName").val();
+            let term = $("#inputSemesterForClass option:selected").val();
+            let year = $("#inputTermYearForClass").val();
+            console.log(grade);
+            console.log(credits);
+            console.log(number);
+            console.log(name);
+            console.log(term);
+            console.log(year);
+
+            db.collection("users").doc(currUser.uid).collection("Semesters").doc(term + " " +
+                year).collection("Classes").doc(number).set({
+                Grade: grade,
+                Credits: credits,
+                Name: name,
+            });
+            populateGrades();
+        }
+
         function saveUserData() {
             db.collection("users").doc(currUser.uid).collection("Semesters").doc(document.getElementById("season").value.toString() + " " +
                 document.getElementById("year").value).set({
@@ -59,6 +179,56 @@
             });
             document.reload();
         }
+
+        function populateGrades() {
+            clearSemesterTable();
+            db.collection("users").doc(currUser.uid).collection("Semesters").get().then(function(querySnapshot) {
+                querySnapshot.forEach(function(semesterDoc) {
+                    let semester = document.createElement("li");
+                    addSemester(semester, semesterDoc.id);
+                    db.collection("users").doc(currUser.uid).collection("Semesters").doc(semesterDoc.id).collection("Classes").get().then(function(querySnapshot) {
+                        querySnapshot.forEach(function(classDoc) {
+                            addClassToSemester(semester, classDoc);
+                        })
+                    });
+                });
+            });
+        }
+
+        function addSemester(semester, id) {
+            semester.setAttribute('class', "list-group-item");
+            semester.appendChild(document.createTextNode(id));
+
+            let addClassButton = document.createElement('button');
+            addClassButton.setAttribute('class', "btn btn-outline-secondary");
+            addClassButton.setAttribute('data-toggle', "modal");
+            addClassButton.setAttribute('data-target', "#modalAddClass");
+            addClassButton.appendChild(document.createTextNode("Add a class"));
+            semester.appendChild(addClassButton);
+            document.getElementById("semesters").appendChild(semester);
+
+        }
+
+        function clearSemesterTable() {
+            let semesters = document.getElementById("semesters");
+            let child = semesters.lastElementChild;
+            while (child) {
+                semesters.removeChild(child);
+                child = semesters.lastElementChild;
+            }
+        }
+
+        function addClassToSemester(semester, doc) {
+            let classesTable = document.createElement('list-group');
+            let classEntry = document.createElement('li');
+            classEntry.setAttribute('class', 'list-group-item');
+            classEntry.appendChild(document.createTextNode(doc.id));
+            classEntry.appendChild(document.createTextNode(" " + doc.data().Grade));
+            classesTable.appendChild(classEntry);
+            semester.appendChild(classesTable);
+        }
+
+
         firebase.initializeApp(firebaseConfig);
         let db = firebase.firestore();
         firebase.auth().onAuthStateChanged(function(user) {
@@ -71,15 +241,8 @@
                 var providerData = user.providerData;
                 document.getElementById("hi").textContent += user.displayName;
 
-                db.collection("users").doc(user.uid).collection("Semesters").get().then(function(querySnapshot) {
-                    querySnapshot.forEach(function(doc) {
-                        let semester = document.createElement("li");
-                        semester.setAttribute('class', "list-group-item");
-                        semester.appendChild(document.createTextNode(doc.id));
-                        document.getElementById("semesters").appendChild(semester);
-                        console.log(doc.id, " => ", doc.data());
-                    });
-                });
+                populateGrades();
+
             } else {
                 window.location.href = "index.html";
             }
