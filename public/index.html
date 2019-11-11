@@ -1,68 +1,21 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Redux Todos Example</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <!--
+      This HTML file is a template.
+      If you open it directly in the browser, you will see an empty page.
 
-<head>
-    <script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
-    <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-</head>
+      You can add webfonts, meta tags, or analytics to this file.
+      The build step will place the bundled scripts into the <body> tag.
 
-<body>
-    <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
-    <script src="https://www.gstatic.com/firebasejs/6.0.2/firebase-app.js"></script>
-    <!-- Add Firebase products that you want to use -->
-    <script src="https://www.gstatic.com/firebasejs/6.0.2/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/6.0.2/firebase-firestore.js"></script>
-    <script type="text/javascript">
-        const firebaseConfig = {
-            apiKey: "AIzaSyBgTINIb8EXsm0xYJBDHWrpJ44RgsaIDQU",
-            authDomain: "pointaverage-44e7d.firebaseapp.com",
-            databaseURL: "https://pointaverage-44e7d.firebaseio.com",
-            projectId: "pointaverage-44e7d",
-            storageBucket: "pointaverage-44e7d.appspot.com",
-            messagingSenderId: "679769712808",
-            appId: "1:679769712808:web:27bc0d4096a2feca"
-        };
-        firebase.initializeApp(firebaseConfig);
-        // FirebaseUI config.
-        firebase.auth().onAuthStateChanged(function(user) {
-            if (user) {
-                // User is signed in.
-                var email = user.email;
-                var emailVerified = user.emailVerified;
-                var uid = user.uid;
-                var providerData = user.providerData;
-                window.location.href = "test.html";
-            } else {
-                var uiConfig = {
-                    signInSuccessUrl: 'test.html',
-                    signInOptions: [
-                        firebase.auth.EmailAuthProvider.PROVIDER_ID,
-                        firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-                    ],
-                    // tosUrl and privacyPolicyUrl accept either url string or a callback
-                    // function.
-                    // Terms of service url/callback.
-                    tosUrl: '<your-tos-url>',
-                    // Privacy policy url/callback.
-                    privacyPolicyUrl: function() {
-                        window.location.assign('<your-privacy-policy-url>');
-                    }
-                };
-
-                // Initialize the FirebaseUI Widget using Firebase.
-                var ui = new firebaseui.auth.AuthUI(firebase.auth());
-                // The start method will wait until the DOM is loaded.
-                ui.start('#firebaseui-auth-container', uiConfig);
-            }
-        });
-
-    </script>
-    <h1>Welcome to PointAverage. Sign in to Continue.</h1>
-    <div id="firebaseui-auth-container"></div>
-</body>
-
+      To begin the development, run `npm start` in this folder.
+      To create a production bundle, use `npm run build`.
+    -->
+  </body>
 </html>
