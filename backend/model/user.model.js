@@ -1,10 +1,11 @@
-var db = require('../database.js');
+const db = require('../database.js');
+const md5 = require('md5');
 
 exports.getUsers = function (response) {
    const sql = 'select * from user;';
-    let res = {"message": "callback test"};
+    let res = {};
     let params = [];
-    db.run(sql, params, function(err, rows) {
+    db.all(sql, params, function(err, rows) {
         if(err) {
             res = {"error": "err.message"};
             return res;
@@ -17,19 +18,23 @@ exports.getUsers = function (response) {
     });
 }
 
-exports.createUser = function(params) {
-    const sql ='INSERT INTO user (name, email, password) VALUES (?,?,?)';
+exports.createUser = function(query, response) {
+    const sql ='INSERT INTO user (name, email, password) VALUES (?,?,?);';
     let res;
+    const params = [query.name, query.email, md5(query.password)];
     db.run(sql, params, function (err, result) {
         if (err){
             res = {"error": err.message};
-            return res;
+            console.log(err.message);
+            response(res);
         }
-        res = {
-            "message": "success",
-            "data": params,
-            "id" : this.lastID
-        };
-        return res;
+        else {
+            res = {
+               "message": "success",
+               "data": params,
+               "id" : this.lastID
+            };
+            response(res);
+        }
     });
 }

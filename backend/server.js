@@ -1,7 +1,6 @@
 // get dependencies
 const express = require('express');
 const bodyParser = require('body-parser');
-
 const config = require('./config.js');
 const app = express();
 
@@ -9,16 +8,23 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
-var db = require('./database.js');
+//------------------------Routes-----------------------------------
+
 const defaultRoutes = require('./routes/default.routes.js');
 const userRoutes = require('./routes/user.routes.js');
+const gradebookRoutes = require('./routes/gradebook.routes.js');
 
 app.use('/', defaultRoutes);
 app.use('/users/', userRoutes);
+app.use('/gradebooks/', gradebookRoutes);
 
-// listen on port 3000
+
+//-----------------------------------------------------------------
+
+
+// listen on port 
 app.listen(config.serverport, () => {
-    console.log("Server is listening on port" + config.serverport);
+    console.log("Server is listening on port " + config.serverport);
 });
 
 //Enable CORS for all HTTP methods

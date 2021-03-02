@@ -11,6 +11,7 @@ exports.users= function(req, res) {
 
 //create a user
 exports.create = function(req, res) {
-    console.log(userModel.createUser(req));
-    res.send('placeholder' /*userModel.createUser(req) */);
+    userModel.createUser(req.query, (response) => {
+        res.send(response);
+    });
 };
