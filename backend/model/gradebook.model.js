@@ -37,6 +37,7 @@ exports.createGradebook = function (query, response) {
 }
 exports.getSemester= function (id, response) {
    const sql = `select * from semesters where id='${id}';`;
+   console.log(sql);
     let res = {};
     let params = [];
     db.get(sql, params, function(err, rows) {

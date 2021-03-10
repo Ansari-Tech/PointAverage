@@ -19,7 +19,7 @@ exports.createGradebook= function(req, res) {
 
 //get semesters 
 exports.getSemester= function(req, res) {
-    gradebookModel.getGradebooks(req.query.semesterID, (response) => {
+    gradebookModel.getSemester(req.query.semesterID, (response) => {
         console.log(response);
         res.send(response);
     });
