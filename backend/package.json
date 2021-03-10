@@ -11,6 +11,8 @@
   "dependencies": {
     "body-parse": "^0.1.0",
     "express": "^4.17.1",
-    "mongoose": "^5.11.18"
+    "md5": "^2.3.0",
+    "mongoose": "^5.11.18",
+    "sqlite3": "^5.0.2"
   }
 }
